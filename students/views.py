@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render # noqa
 from django.http.response import HttpResponse
 
-from students.utils import gen_password, parse_length
+from students.utils import gen_password, parse_length, format_list
+from students.models import Student
 
 
 # Create your views here.
@@ -18,3 +19,19 @@ def get_random(request):
         return HttpResponse(str(err), status_code=400)
     result = gen_password(length)
     return HttpResponse(result)
+
+
+def students_list(request):
+    students = Student.objects.all()
+
+    params = [
+        "first_name",
+        "last_name",
+        "rating",
+    ]
+    for param in params:
+        value = request.GET.get(param)
+        if value:
+            students = students.filter(**{param: value})
+
+    return HttpResponse(format_list(students))

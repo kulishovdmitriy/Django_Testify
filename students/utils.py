@@ -14,3 +14,7 @@ def parse_length(request, default=10):
     if not 3 < length < 100:
         raise ValueError("Length must be [3...100]")
     return length
+
+
+def format_list(lst):
+    return "<br>".join([str(value) for value in lst])
