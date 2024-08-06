@@ -10,11 +10,12 @@ from faker import Faker
 class Student(models.Model):
     first_name = models.CharField(max_length=64, null=False)
     last_name = models.CharField(max_length=64, null=False)
+    email = models.EmailField(max_length=64, null=True)
     birthdate = models.DateField(null=True, default=datetime.date.today)
     rating = models.SmallIntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
 
     @classmethod
-    def student_create(cls, first_name, last_name, rating, birthdate=None):
+    def student_create(cls, first_name, last_name, email, rating, birthdate=None):
         new_student = cls(
             first_name=first_name,
             last_name=last_name,
@@ -40,10 +41,11 @@ class Student(models.Model):
             student = Student(
                 first_name=faker.first_name(),
                 last_name=faker.last_name(),
+                email=faker.email(),
                 birthdate=faker.date_between('-30y', '-20y'),
                 rating=random.randint(0, 100)
             )
             student.save()
 
     def __str__(self):
-        return f"{self.id}, {self.full_name_student()}, {self.age_student()}, {self.rating}"
+        return f"{self.id}, {self.full_name_student()}, {self.age_student()}, {self.rating}, {self.email}"
