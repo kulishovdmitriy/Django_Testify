@@ -17,14 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from students.views import hello, get_random, students_list
+from students.views import hello, get_random, students_list, students_create
 from teachers.views import teachers_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', hello),
+    path('', hello),
     path('password/', get_random),
+
     path('students/', students_list),
-    path('teachers/', teachers_list)
+    path('students/create', students_create),
+
+    path('teachers/', teachers_list),
+
 
 ]

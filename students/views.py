@@ -1,6 +1,7 @@
-from django.shortcuts import render # noqa
-from django.http.response import HttpResponse
+from django.shortcuts import render
+from django.http.response import HttpResponse, HttpResponseRedirect
 
+from students.forms import StudentCreateForms
 from students.utils import gen_password, parse_length, format_list
 from students.models import Student
 
@@ -34,4 +35,27 @@ def students_list(request):
         if value:
             students = students.filter(**{param: value})
 
-    return HttpResponse(format_list(students))
+    return render(
+        request,
+        "students_list.html",
+        {"students": format_list(students)},
+    )
+
+
+def students_create(request):
+
+    if request.method == "GET":
+        form = StudentCreateForms()
+
+    form_create_student = StudentCreateForms(request.POST)
+
+    if form_create_student.is_valid():
+
+        form_create_student.save()
+        return HttpResponseRedirect("/students/")
+
+    return render(
+        request,
+        "students_create.html",
+        {"form": form_create_student}
+    )
