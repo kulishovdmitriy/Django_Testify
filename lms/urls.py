@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from students.views import hello, get_random, students_list, students_create
-from teachers.views import teachers_list
+from teachers.views import teachers_list, teacher_create
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,6 @@ urlpatterns = [
     path('students/create', students_create),
 
     path('teachers/', teachers_list),
-
+    path('teachers/create', teacher_create),
 
 ]
