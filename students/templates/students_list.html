@@ -21,7 +21,18 @@
       <input type="submit" value="Search">
     </form>
 <br><br>
-{{students | safe}}
+
+{% for student in students %}
+    <a href="{% url 'students:edit' student.id %}">Edit</a>
+    {{ student.id }}
+    {{ student.first_name }}
+    {{ student.last_name }}
+    {{ student.email }}
+    {{ student.birthdate }}
+    {{ student.rating }}
+    <br>
+
+{% endfor %}
 
 </body>
 </html>
