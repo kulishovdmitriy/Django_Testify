@@ -1,14 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.http.response import HttpResponse, HttpResponseRedirect
 
-from students.utils import format_list
 from teachers.models import Teacher
 from teachers.forms import TeacherCreateForms
 
 # Create your views here.
 
 
-def teachers_list(request):
+def get_teachers(request):
     teachers = Teacher.objects.all()
 
     params = [
@@ -27,22 +26,46 @@ def teachers_list(request):
     return render(
         request,
         "teachers_list.html",
-        {"teachers": format_list(teachers)},
+        {"teachers": teachers},
     )
 
 
-def teacher_create(request):
+def create_teacher(request):
 
     if request.method == "GET":
-        form_create_teacher = TeacherCreateForms()
+        form = TeacherCreateForms()
 
-    form_create_teacher = TeacherCreateForms(request.POST)
-    if form_create_teacher.is_valid():
-        form_create_teacher.save()
-        return HttpResponseRedirect("/teachers/")
+    if request.method == "POST":
+        form = TeacherCreateForms(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("teachers:list"))
 
     return render(
         request,
         "teacher_create.html",
-        {"form": form_create_teacher}
+        {"form": form}
+    )
+
+
+def edit_teacher(request, id):
+    try:
+        teacher = Teacher.objects.get(id=id)
+    except Teacher.DoesNotExist as err:
+        return HttpResponse(str(err), status=404)
+
+    if request.method == "GET":
+        form = TeacherCreateForms(instance=teacher)
+
+    elif request.method == "POST":
+        form = TeacherCreateForms(request.POST, instance=teacher)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("teachers:list"))
+
+    return render(
+        request,
+        "teacher_edit.html",
+        {"form": form}
     )

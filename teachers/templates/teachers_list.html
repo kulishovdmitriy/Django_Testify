@@ -6,10 +6,10 @@
 </head>
 <body>
 
-<h2>HTML Forms</h2>
+<h2>Forms All teachers</h2>
 
     <form>
-          <label>First name:</label>
+      <label>First name:</label>
       <input type="text" name="first_name"><br><br>
 
       <label>Last name:</label>
@@ -28,7 +28,18 @@
     </form>
 
 <br><br>
-{{teachers | safe}}
+{% for teacher in teachers %}
+    <a href="{% url 'teachers:edit' teacher.id %}">Edit</a>
+    {{ teacher.id }}
+    {{ teacher.first_name }}
+    {{ teacher.last_name }}
+    {{ teacher.email }}
+    {{ teacher.birthdate }}
+    {{ teacher.subject }}
+    {{ teacher.years_of_experience }}
+    <br>
+
+{% endfor %}
 
 </body>
 </html>

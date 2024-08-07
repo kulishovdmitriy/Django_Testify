@@ -39,4 +39,5 @@ class Teacher(models.Model):
             teacher.save()
 
     def __str__(self):
-        return f"{self.full_name_teacher()}, {self.age_teacher()}, {self.subject}, {self.years_of_experience}, {self.email}"
+        return (f"{self.full_name_teacher()}, {self.age_teacher()}, {self.subject}, {self.years_of_experience}, "
+                f"{self.email}")
