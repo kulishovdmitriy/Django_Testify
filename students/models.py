@@ -4,6 +4,7 @@ import random
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from faker import Faker
+
 # Create your models here.
 
 
@@ -13,17 +14,6 @@ class Student(models.Model):
     email = models.EmailField(max_length=64, null=True)
     birthdate = models.DateField(null=True, default=datetime.date.today)
     rating = models.SmallIntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
-
-    @classmethod
-    def student_create(cls, first_name, last_name, email, rating, birthdate=None):
-        new_student = cls(
-            first_name=first_name,
-            last_name=last_name,
-            birthdate=birthdate,
-            rating=rating
-        )
-        new_student.save()
-        return new_student
 
     def full_name_student(self):
         return f"{self.first_name} {self.last_name}"
