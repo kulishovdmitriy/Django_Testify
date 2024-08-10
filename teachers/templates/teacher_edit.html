@@ -13,7 +13,7 @@
             {{form.as_p}}
 
             <input type="submit" value="Save">
-            <input formaction="{% url 'teachers:delete' teacher.id %}" type="submit" value="Delete">
+            <input formaction="{% url 'teachers:delete' teacher.uuid %}" type="submit" value="Delete">
         </form>
 
 {% endblock %}

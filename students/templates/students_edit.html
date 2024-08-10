@@ -14,7 +14,7 @@
             {{form.as_p}}
 
             <input type="submit" value="Save">
-            <input formaction="{% url 'students:delete' student.id %}" type="submit" value="Delete">
+            <input formaction="{% url 'students:delete' student.uuid %}" type="submit" value="Delete">
         </form>
 
 {% endblock %}

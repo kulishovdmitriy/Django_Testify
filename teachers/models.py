@@ -1,5 +1,7 @@
 import datetime
 import random
+import uuid
+
 from django.db import models
 
 from faker import Faker
@@ -15,6 +17,7 @@ class Teacher(models.Model):
     birthdate = models.DateField(null=True, default=datetime.date.today)
     subject = models.CharField(max_length=64, null=False)
     years_of_experience = models.IntegerField(null=False)
+    uuid = models.UUIDField(null=True, default=uuid.uuid4)
 
     def full_name_teacher(self):
         return f"{self.first_name} {self.last_name}"

@@ -1,9 +1,12 @@
 import datetime
 import random
+import uuid
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from faker import Faker
+
+from groups.models import Group
 
 # Create your models here.
 
@@ -14,6 +17,9 @@ class Student(models.Model):
     email = models.EmailField(max_length=64, null=True)
     birthdate = models.DateField(null=True, default=datetime.date.today)
     rating = models.SmallIntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
+    uuid = models.UUIDField(null=True, default=uuid.uuid4)
+
+    group_id = models.ForeignKey(to=Group, null=True, on_delete=models.SET_NULL, related_name='students')
 
     def full_name_student(self):
         return f"{self.first_name} {self.last_name}"
