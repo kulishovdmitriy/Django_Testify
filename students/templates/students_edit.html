@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends 'base.html' %}
+
+{% block title %}
     <title>Edit student</title>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
 
     <h2>Forms Edit student</h2>
 
@@ -14,7 +14,7 @@
             {{form.as_p}}
 
             <input type="submit" value="Save">
+            <input formaction="{% url 'students:delete' student.id %}" type="submit" value="Delete">
         </form>
 
-</body>
-</html>
+{% endblock %}
