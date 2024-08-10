@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>All teachers</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>All Teachers</title>
+{% endblock %}
+
+
+{% block content %}
 
 <h2>Forms All teachers</h2>
 
@@ -25,21 +26,43 @@
       <input type="text" name="years_of_experience"><br><br>
 
       <input type="submit" value="Search">
+      <input formaction="{% url 'teachers:create' %}" type="submit" value="Create">
     </form>
 
 <br><br>
-{% for teacher in teachers %}
-    <a href="{% url 'teachers:edit' teacher.id %}">Edit</a>
-    {{ teacher.id }}
-    {{ teacher.first_name }}
-    {{ teacher.last_name }}
-    {{ teacher.email }}
-    {{ teacher.birthdate }}
-    {{ teacher.subject }}
-    {{ teacher.years_of_experience }}
-    <br>
+ <table>
+    <tr>
+        <th>ID</th>
+        <th>First_Name</th>
+        <th>Last_Name</th>
+        <th>Email</th>
+        <th>Birthdate</th>
+        <th>Subject</th>
+        <th>Years_of_experience</th>
+        <th>Create</th>
+        <th>Delete</th>
+    </tr>
 
-{% endfor %}
+    {% for teacher in teachers %}
 
-</body>
-</html>
+        <tr>
+
+            <td>{{ teacher.id }}</td>
+            <td>{{ teacher.first_name }}</td>
+            <td>{{ teacher.last_name }}</td>
+            <td>{{ teacher.email }}</td>
+            <td>{{ teacher.birthdate }}</td>
+            <td>{{ teacher.subject }}</td>
+            <td>{{ teacher.years_of_experience }}</td>
+            <td>
+                <a href="{% url 'teachers:edit' teacher.id %}">Edit</a>
+            </td>
+            <td>
+                <a href="{% url 'teachers:delete' teacher.id %}">Delete</a>
+            </td>
+
+        </tr>
+
+    {% endfor %}
+</table>
+{% endblock %}

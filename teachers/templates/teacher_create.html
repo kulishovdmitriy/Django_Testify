@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends 'base.html' %}
+
+{% block title %}
     <title>Create teacher</title>
-</head>
-<body>
+{% endblock %}
+
+
+{% block content %}
 
     <h2>Forms Create teacher</h2>
 
@@ -14,7 +15,7 @@
             {{form.as_p}}
 
             <input type="submit" value="Create">
+            <input type="button" value="Back" onclick="history.back()">
         </form>
 
-</body>
-</html>
+{% endblock %}

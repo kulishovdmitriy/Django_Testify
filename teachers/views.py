@@ -1,5 +1,5 @@
-from django.shortcuts import render, reverse
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, reverse, get_object_or_404
+from django.http.response import HttpResponseRedirect
 
 from teachers.models import Teacher
 from teachers.forms import TeacherCreateForms
@@ -48,11 +48,9 @@ def create_teacher(request):
     )
 
 
-def edit_teacher(request, id):
-    try:
-        teacher = Teacher.objects.get(id=id)
-    except Teacher.DoesNotExist as err:
-        return HttpResponse(str(err), status=404)
+def edit_teacher(request, teacher_id):
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
 
     if request.method == "GET":
         form = TeacherCreateForms(instance=teacher)
@@ -67,5 +65,17 @@ def edit_teacher(request, id):
     return render(
         request,
         "teacher_edit.html",
-        {"form": form}
+        {
+            "form": form,
+            "teacher": teacher,
+        }
     )
+
+
+def delete_teacher(request, teacher_id):
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+
+    teacher.delete()
+
+    return HttpResponseRedirect(reverse("teachers:list"))

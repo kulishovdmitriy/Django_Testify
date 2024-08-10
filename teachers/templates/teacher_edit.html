@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit teacher</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block title %}
+    <title>Edit Teacher</title>
+{% endblock %}
+
+{% block content %}
     <h2>Forms Edit teacher</h2>
 
         <form method="post">
@@ -14,7 +13,7 @@
             {{form.as_p}}
 
             <input type="submit" value="Save">
+            <input formaction="{% url 'teachers:delete' teacher.id %}" type="submit" value="Delete">
         </form>
 
-</body>
-</html>
+{% endblock %}
