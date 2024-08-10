@@ -7,10 +7,6 @@ from students.models import Student
 # Create your views here.
 
 
-def hello(request):
-    return HttpResponse("Hello from Django!!!")
-
-
 def get_students(request):
     students = Student.objects.all()
 
