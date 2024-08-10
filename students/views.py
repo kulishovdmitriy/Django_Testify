@@ -56,9 +56,9 @@ def create_student(request):
     )
 
 
-def edit_student(request, student_id):
+def edit_student(request, uuid):
 
-    student = get_object_or_404(Student, id=student_id)
+    student = get_object_or_404(Student, uuid=uuid)
 
     if request.method == "GET":
         form = StudentCreateForms(instance=student)
@@ -80,9 +80,9 @@ def edit_student(request, student_id):
     )
 
 
-def delete_student(request, student_id):
+def delete_student(request, uuid):
 
-    student = get_object_or_404(Student, id=student_id)
+    student = get_object_or_404(Student, uuid=uuid)
 
     student.delete()
 

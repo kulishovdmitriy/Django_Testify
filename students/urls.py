@@ -24,7 +24,7 @@ app_name = "students"
 urlpatterns = [
     path('', get_students, name='list'),
     path('create/', create_student, name='create'),
-    path('edit/<int:student_id>', edit_student, name='edit'),
-    path('delete/<int:student_id>', delete_student, name='delete')
+    path('edit/<uuid:uuid>', edit_student, name='edit'),
+    path('delete/<uuid:uuid>', delete_student, name='delete')
 
 ]

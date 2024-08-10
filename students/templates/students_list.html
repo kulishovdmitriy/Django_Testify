@@ -48,10 +48,10 @@
             <td>{{ student.birthdate }}</td>
             <td>{{ student.rating }}</td>
             <td>
-                <a href="{% url 'students:edit' student.id %}">Edit</a>
+                <a href="{% url 'students:edit' student.uuid %}">Edit</a>
             </td>
             <td>
-                <a href="{% url 'students:delete' student.id %}">Delete</a>
+                <a href="{% url 'students:delete' student.uuid %}">Delete</a>
             </td>
 
         </tr>

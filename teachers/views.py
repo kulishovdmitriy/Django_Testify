@@ -48,9 +48,9 @@ def create_teacher(request):
     )
 
 
-def edit_teacher(request, teacher_id):
+def edit_teacher(request, uuid):
 
-    teacher = get_object_or_404(Teacher, id=teacher_id)
+    teacher = get_object_or_404(Teacher, uuid=uuid)
 
     if request.method == "GET":
         form = TeacherCreateForms(instance=teacher)
@@ -72,9 +72,9 @@ def edit_teacher(request, teacher_id):
     )
 
 
-def delete_teacher(request, teacher_id):
+def delete_teacher(request, uuid):
 
-    teacher = get_object_or_404(Teacher, id=teacher_id)
+    teacher = get_object_or_404(Teacher, uuid=uuid)
 
     teacher.delete()
 

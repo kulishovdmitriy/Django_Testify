@@ -55,10 +55,10 @@
             <td>{{ teacher.subject }}</td>
             <td>{{ teacher.years_of_experience }}</td>
             <td>
-                <a href="{% url 'teachers:edit' teacher.id %}">Edit</a>
+                <a href="{% url 'teachers:edit' teacher.uuid %}">Edit</a>
             </td>
             <td>
-                <a href="{% url 'teachers:delete' teacher.id %}">Delete</a>
+                <a href="{% url 'teachers:delete' teacher.uuid %}">Delete</a>
             </td>
 
         </tr>
