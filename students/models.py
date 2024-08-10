@@ -19,7 +19,7 @@ class Student(models.Model):
     rating = models.SmallIntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
     uuid = models.UUIDField(null=True, default=uuid.uuid4)
 
-    group_id = models.ForeignKey(to=Group, null=True, on_delete=models.SET_NULL, related_name='students')
+    group = models.ForeignKey(to=Group, null=True, on_delete=models.SET_NULL, related_name='students')
 
     def full_name_student(self):
         return f"{self.first_name} {self.last_name}"

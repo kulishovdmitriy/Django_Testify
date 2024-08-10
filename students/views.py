@@ -1,14 +1,10 @@
 from django.shortcuts import render, reverse, get_object_or_404
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponseRedirect
 
 from students.forms import StudentCreateForms
 from students.models import Student
 
 # Create your views here.
-
-
-def hello(request):
-    return HttpResponse("Hello from Django!!!")
 
 
 def get_students(request):
