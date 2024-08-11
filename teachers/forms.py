@@ -6,7 +6,7 @@ from teachers.models import Teacher
 class TeacherCreateForms(forms.ModelForm):
     class Meta:
         model = Teacher
-        fields = ['first_name', 'last_name', 'email', 'birthdate', 'subject', 'years_of_experience']
+        fields = ['first_name', 'last_name', 'email', 'birthdate', 'subject', 'years_of_experience', 'group']
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
