@@ -26,43 +26,12 @@
       <input type="text" name="years_of_experience"><br><br>
 
       <input type="submit" value="Search">
+
       <input formaction="{% url 'teachers:create' %}" type="submit" value="Create">
+
+      <input type="button" value="Back" onclick="history.back()">
     </form>
 
-<br><br>
- <table>
-    <tr>
-        <th>ID</th>
-        <th>First_Name</th>
-        <th>Last_Name</th>
-        <th>Email</th>
-        <th>Birthdate</th>
-        <th>Subject</th>
-        <th>Years_of_experience</th>
-        <th>Edit</th>
-        <th>Delete</th>
-    </tr>
+{% include 'includes/teachers_table.html' %}
 
-    {% for teacher in teachers %}
-
-        <tr>
-
-            <td>{{ teacher.id }}</td>
-            <td>{{ teacher.first_name }}</td>
-            <td>{{ teacher.last_name }}</td>
-            <td>{{ teacher.email }}</td>
-            <td>{{ teacher.birthdate }}</td>
-            <td>{{ teacher.subject }}</td>
-            <td>{{ teacher.years_of_experience }}</td>
-            <td>
-                <a href="{% url 'teachers:edit' teacher.uuid %}">Edit</a>
-            </td>
-            <td>
-                <a href="{% url 'teachers:delete' teacher.uuid %}">Delete</a>
-            </td>
-
-        </tr>
-
-    {% endfor %}
-</table>
 {% endblock %}

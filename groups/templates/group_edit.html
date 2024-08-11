@@ -14,9 +14,14 @@
     {{form.as_p}}
 
     <input type="submit" value="Save">
+
     <input formaction="{% url 'groups:delete' group.id %}" type="submit" value="Delete">
+
+    <input type="button" value="Back" onclick="history.back()">
 </form>
 
 {% include 'includes/students_table.html' %}
+
+{% include 'includes/teachers_table.html' %}
 
 {% endblock %}

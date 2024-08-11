@@ -72,6 +72,7 @@ def edit_group(request, group_id):
             "form": form,
             "group": group,
             "students": group.students.all(),
+            "teachers": group.teachers.all(),
         }
     )
 
