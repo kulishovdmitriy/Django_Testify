@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    <title>Edit student</title>
+{% load crispy_forms_tags %}
+
+{% block header %}
+  <h2>Edit student</h2>
 {% endblock %}
 
 {% block content %}
@@ -11,13 +13,15 @@
         <form method="post">
             {% csrf_token %}
 
-            {{form.as_p}}
+            {{form|crispy}}
 
-            <input type="submit" value="Save">
+            <div class="mb-3">
+                <input type="submit" class="btn btn-success" value="Save">
 
-            <input formaction="{% url 'students:delete' student.uuid %}" type="submit" value="Delete">
+                <input formaction="{% url 'students:delete' student.uuid %}" type="submit" class="btn btn-danger" value="Delete">
 
-            <input type="button" value="Back" onclick="history.back()">
+                <input type="button" class="btn btn-dark" value="Back" onclick="history.back()">
+            </div>
         </form>
 
 {% endblock %}

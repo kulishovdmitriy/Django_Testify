@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    <title>Create teacher</title>
-{% endblock %}
+{% load crispy_forms_tags %}
 
+{% block header %}
+  <h2>Create teacher</h2>
+{% endblock %}
 
 {% block content %}
 
@@ -12,11 +13,13 @@
         <form method="post">
             {% csrf_token %}
 
-            {{form.as_p}}
+            {{form|crispy}}
 
-            <input type="submit" value="Create">
+            <div class="mb-3">
+                <input class="btn btn-success" type="submit" value="Create">
 
-            <input type="button" value="Back" onclick="history.back()">
+                <input type="button" class="btn btn-dark" value="Back" onclick="history.back()">
+            </div>
         </form>
 
 {% endblock %}

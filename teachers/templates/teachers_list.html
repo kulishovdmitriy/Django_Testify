@@ -1,36 +1,48 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    <title>All Teachers</title>
+{% block header %}
+  <h2>All Teachers</h2>
 {% endblock %}
-
 
 {% block content %}
 
 <h2>Forms All teachers</h2>
 
-    <form>
-      <label>First name:</label>
-      <input type="text" name="first_name"><br><br>
+  <form>
 
-      <label>Last name:</label>
-      <input type="text" name="last_name"><br><br>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon1">First name:</span>
+      <input name="first_name" type="text" class="form-control" placeholder="Enter first name" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-      <label>Birthdate:</label>
-      <input type="number" name="birthdate"><br><br>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon2">Last name:</span>
+      <input name="last_name" type="text" class="form-control" placeholder="Enter last name" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-      <label>Subject:</label>
-      <input type="text" name="subject"><br><br>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon3">Birthdate:</span>
+      <input name="birthdate" type="date" class="form-control" placeholder="Enter birthdate" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-      <label>Years_of_experience:</label>
-      <input type="text" name="years_of_experience"><br><br>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon4">Subject:</span>
+      <input name="subject" type="text" class="form-control" placeholder="Enter subject" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-      <input type="submit" value="Search">
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon5">Years_of_experience:</span>
+      <input name="years_of_experience" type="number" class="form-control" placeholder="Enter years of experience" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-      <input formaction="{% url 'teachers:create' %}" type="submit" value="Create">
+    <div class="mb-3">
+    <input type="submit" class="btn btn-warning" value="Search">
 
-      <input type="button" value="Back" onclick="history.back()">
-    </form>
+    <input formaction="{% url 'teachers:create' %}" type="submit" class="btn btn-info" value="Create">
+
+    <input type="button" class="btn btn-dark" value="Back" onclick="history.back()">
+    </div>
+  </form>
 
 <h2>Table Teachers</h2>
 
