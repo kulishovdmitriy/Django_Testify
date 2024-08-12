@@ -1,29 +1,36 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    <title>All Students</title>
+{% block header %}
+  <h2>All Students</h2>
 {% endblock %}
-
 
 {% block content %}
 
 <h2>Forms All students</h2>
 
 <form>
-  <label>First name:</label>
-  <input type="text" name="first_name"><br><br>
+  <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon1">First name:</span>
+      <input name="first_name" type="text" class="form-control" placeholder="Enter first name" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-  <label>Last name:</label>
-  <input type="text" name="last_name"><br><br>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon2">Last name:</span>
+      <input name="last_name" type="text" class="form-control" placeholder="Enter last name" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-  <label>Rating:</label>
-  <input type="number" name="rating"><br><br>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon3">Rating:</span>
+      <input name="rating" type="number" class="form-control" placeholder="Enter rating" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-  <input type="submit" value="Search">
+  <div class="mb-3">
+    <input type="submit" class="btn btn-warning" value="Search">
 
-  <input formaction="{% url 'students:create' %}" type="submit" value="Create">
+    <input formaction="{% url 'students:create' %}" type="submit" class="btn btn-info" value="Create">
 
-  <input type="button" value="Back" onclick="history.back()">
+    <input type="button" class="btn btn-dark" value="Back" onclick="history.back()">
+  </div>
 </form>
 
 <h2>Table Students</h2>

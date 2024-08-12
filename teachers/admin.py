@@ -16,6 +16,7 @@ class StudentsTable(admin.TabularInline):
 class TeacherAdmin(admin.ModelAdmin):
     exclude = ['uuid']
     inlines = [StudentsTable]
+    list_per_page = 10
 
 
 admin.site.register(Teacher, TeacherAdmin)

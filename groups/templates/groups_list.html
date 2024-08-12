@@ -1,29 +1,31 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    <title>All Groups</title>
+{% block header %}
+  <h2>All Groups</h2>
 {% endblock %}
-
 
 {% block content %}
 
 <h2>Forms All groups</h2>
 
 <form>
-  <label>Name:</label>
-  <input type="text" name="name"><br><br>
+  <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon1">Name:</span>
+      <input name="name" type="text" class="form-control" placeholder="Enter name" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-  <label>Course:</label>
-  <input type="text" name="course"><br><br>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon2">Course:</span>
+      <input name="course" type="text" class="form-control" placeholder="Enter course" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
 
-  <label>Start data:</label>
-  <input type="date" name="start_data"><br><br>
+  <div class="mb-3">
+      <input type="submit" class="btn btn-warning" value="Search">
 
-  <input type="submit" value="Search">
+      <input formaction="{% url 'groups:create' %}" type="submit" class="btn btn-info" value="Create">
 
-  <input formaction="{% url 'groups:create' %}" type="submit" value="Create">
-
-  <input type="button" value="Back" onclick="history.back()">
+      <input type="button" class="btn btn-dark" value="Back" onclick="history.back()">
+  </div>
 </form>
 
 <h2>Table Groups</h2>
