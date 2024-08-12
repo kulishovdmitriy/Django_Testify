@@ -68,6 +68,7 @@ def edit_teacher(request, uuid):
         {
             "form": form,
             "teacher": teacher,
+            "students": teacher.students.all(),
         }
     )
 
