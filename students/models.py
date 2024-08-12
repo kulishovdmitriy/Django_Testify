@@ -7,6 +7,8 @@ from django.db import models
 from faker import Faker
 
 from groups.models import Group
+from teachers.models import Teacher
+
 
 # Create your models here.
 
@@ -20,6 +22,8 @@ class Student(models.Model):
     uuid = models.UUIDField(null=True, default=uuid.uuid4)
 
     group = models.ForeignKey(to=Group, null=True, on_delete=models.SET_NULL, related_name='students')
+
+    teacher = models.ForeignKey(to=Teacher, null=True, on_delete=models.SET_NULL, related_name='students')
 
     def full_name_student(self):
         return f"{self.first_name} {self.last_name}"

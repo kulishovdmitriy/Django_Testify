@@ -6,7 +6,7 @@ from students.models import Student
 class StudentCreateForms(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ['first_name', 'last_name', 'email', 'birthdate', 'rating', 'group']
+        fields = ['first_name', 'last_name', 'email', 'birthdate', 'rating', 'group', 'teacher']
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
