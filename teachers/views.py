@@ -2,7 +2,8 @@ from django.shortcuts import render, reverse, get_object_or_404
 from django.http.response import HttpResponseRedirect
 
 from teachers.models import Teacher
-from teachers.forms import TeacherCreateForms
+from teachers.forms import TeacherCreateForms, TeacherEditForms
+
 
 # Create your views here.
 
@@ -53,10 +54,10 @@ def edit_teacher(request, uuid):
     teacher = get_object_or_404(Teacher, uuid=uuid)
 
     if request.method == "GET":
-        form = TeacherCreateForms(instance=teacher)
+        form = TeacherEditForms(instance=teacher)
 
     elif request.method == "POST":
-        form = TeacherCreateForms(request.POST, instance=teacher)
+        form = TeacherEditForms(request.POST, instance=teacher)
 
         if form.is_valid():
             form.save()

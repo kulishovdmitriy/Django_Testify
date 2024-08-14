@@ -1,7 +1,7 @@
 from django.shortcuts import render, reverse, get_object_or_404
 from django.http.response import HttpResponseRedirect
 
-from students.forms import StudentCreateForms
+from students.forms import StudentCreateForms, StudentEditForms
 from students.models import Student
 
 # Create your views here.
@@ -57,10 +57,10 @@ def edit_student(request, uuid):
     student = get_object_or_404(Student, uuid=uuid)
 
     if request.method == "GET":
-        form = StudentCreateForms(instance=student)
+        form = StudentEditForms(instance=student)
 
     elif request.method == "POST":
-        form = StudentCreateForms(request.POST, instance=student)
+        form = StudentEditForms(request.POST, instance=student)
 
         if form.is_valid():
             form.save()
