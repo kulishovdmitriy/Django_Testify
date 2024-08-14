@@ -34,5 +34,3 @@ class TeacherEditForms(TeacherBaseForms):
     class Meta(TeacherBaseForms.Meta):
 
         pass
-
-
