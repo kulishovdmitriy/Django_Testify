@@ -3,7 +3,7 @@ from django import forms
 from students.models import Student
 
 
-class StudentCreateForms(forms.ModelForm):
+class StudentBaseForms(forms.ModelForm):
     class Meta:
         model = Student
         fields = ['first_name', 'last_name', 'email', 'birthdate', 'rating', 'group', 'teacher']
@@ -22,3 +22,15 @@ class StudentCreateForms(forms.ModelForm):
             raise forms.ValidationError("This email domain is not allowed")
 
         return email
+
+
+class StudentCreateForms(StudentBaseForms):
+    class Meta(StudentBaseForms.Meta):
+
+        fields = ['first_name', 'last_name', 'email', 'birthdate']
+
+
+class StudentEditForms(StudentBaseForms):
+    class Meta(StudentBaseForms.Meta):
+
+        fields = ['first_name', 'last_name', 'email', 'birthdate', 'rating', 'group', 'teacher']
