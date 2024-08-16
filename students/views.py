@@ -1,6 +1,7 @@
 from django.http.response import Http404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from students.forms import StudentCreateForms, StudentEditForms
 from students.models import Student
@@ -35,7 +36,7 @@ class StudentsListView(ListView):
         return qs
 
 
-class StudentsCreateView(CreateView):
+class StudentsCreateView(LoginRequiredMixin, CreateView):
 
     model = Student
     form_class = StudentCreateForms
@@ -43,7 +44,7 @@ class StudentsCreateView(CreateView):
     success_url = reverse_lazy("students:list")
 
 
-class StudentsEditView(UpdateView):
+class StudentsEditView(LoginRequiredMixin, UpdateView):
 
     model = Student
     form_class = StudentEditForms
@@ -57,7 +58,7 @@ class StudentsEditView(UpdateView):
         return self.get_queryset().get(uuid=uuid)
 
 
-class StudentsDeleteView(DeleteView):
+class StudentsDeleteView(LoginRequiredMixin, DeleteView):
 
     model = Student
     template_name = "student_confirm_delete.html"
