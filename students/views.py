@@ -1,5 +1,6 @@
-from django.shortcuts import render, reverse, get_object_or_404
-from django.http.response import HttpResponseRedirect
+from django.http.response import Http404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from students.forms import StudentCreateForms, StudentEditForms
 from students.models import Student
@@ -7,79 +8,65 @@ from students.models import Student
 # Create your views here.
 
 
-def get_students(request):
-    students = Student.objects.all()
+class StudentsListView(ListView):
 
-    params = [
-        "first_name",
-        "last_name",
-        "email",
-        "rating",
-        "birthdate",
-    ]
-    for param in params:
-        value = request.GET.get(param)
-        if value:
-            students = students.filter(**{param: value})
+    model = Student
+    template_name = "students_list.html"
+    context_object_name = "students"
 
-    return render(
-        request,
-        "students_list.html",
-        {
-            "students": students,
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+        params = {
+            "first_name": "__icontains",
+            "last_name": "__icontains",
+            "email": "__icontains",
+            "rating": "",
+            "birthdate": "",
         }
-    )
+        for param, lookup in params.items():
+            value = request.GET.get(param)
+            if value:
+                if lookup:
+                    qs = qs.filter(**{f"{param}{lookup}": value})
+                else:
+                    qs = qs.filter(**{param: value})
+
+        return qs
 
 
-def create_student(request):
+class StudentsCreateView(CreateView):
 
-    if request.method == "GET":
-        form = StudentCreateForms()
-
-    form_create_student = StudentCreateForms(request.POST)
-
-    if form_create_student.is_valid():
-
-        form_create_student.save()
-        return HttpResponseRedirect(reverse("students:list"))
-
-    return render(
-        request,
-        "students_create.html",
-        {
-            "form": form,
-        }
-    )
+    model = Student
+    form_class = StudentCreateForms
+    template_name = "students_create.html"
+    success_url = reverse_lazy("students:list")
 
 
-def edit_student(request, uuid):
+class StudentsEditView(UpdateView):
 
-    student = get_object_or_404(Student, uuid=uuid)
+    model = Student
+    form_class = StudentEditForms
+    template_name = "students_edit.html"
+    success_url = reverse_lazy("students:list")
+    context_object_name = "student"
+    pk_url_kwarg = "uuid"
 
-    if request.method == "GET":
-        form = StudentEditForms(instance=student)
-
-    elif request.method == "POST":
-        form = StudentEditForms(request.POST, instance=student)
-
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("students:list"))
-
-    return render(
-        request,
-        "students_edit.html",
-        {
-            "form": form,
-            "student": student,
-        }
-    )
+    def get_object(self, queryset=None):
+        uuid = self.kwargs.get("uuid")
+        return self.get_queryset().get(uuid=uuid)
 
 
-def delete_student(request, uuid):
+class StudentsDeleteView(DeleteView):
 
-    student = get_object_or_404(Student, uuid=uuid)
+    model = Student
+    template_name = "student_confirm_delete.html"
+    success_url = reverse_lazy("students:list")
+    context_object_name = "student"
+    pk_url_kwarg = "uuid"
 
-    student.delete()
-
-    return HttpResponseRedirect(reverse("students:list"))
+    def get_object(self, queryset=None):
+        uuid = self.kwargs.get(self.pk_url_kwarg)
+        if not uuid:
+            raise Http404("Student not found")
+        return self.get_queryset().get(uuid=uuid)

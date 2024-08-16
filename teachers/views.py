@@ -1,83 +1,80 @@
-from django.shortcuts import render, reverse, get_object_or_404
-from django.http.response import HttpResponseRedirect
+from django.http.response import Http404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from teachers.models import Teacher
 from teachers.forms import TeacherCreateForms, TeacherEditForms
 
-
 # Create your views here.
 
 
-def get_teachers(request):
-    teachers = Teacher.objects.all()
+class TeachersListView(ListView):
 
-    params = [
-        "first_name",
-        "last_name",
-        "birthdate",
-        "subject",
-        "years_of_experience",
+    model = Teacher
+    template_name = "teachers_list.html"
+    context_object_name = "teachers"
 
-    ]
-    for param in params:
-        value = request.GET.get(param)
-        if value:
-            teachers = teachers.filter(**{param: value})
-
-    return render(
-        request,
-        "teachers_list.html",
-        {"teachers": teachers},
-    )
-
-
-def create_teacher(request):
-
-    if request.method == "GET":
-        form = TeacherCreateForms()
-
-    if request.method == "POST":
-        form = TeacherCreateForms(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("teachers:list"))
-
-    return render(
-        request,
-        "teacher_create.html",
-        {"form": form}
-    )
-
-
-def edit_teacher(request, uuid):
-
-    teacher = get_object_or_404(Teacher, uuid=uuid)
-
-    if request.method == "GET":
-        form = TeacherEditForms(instance=teacher)
-
-    elif request.method == "POST":
-        form = TeacherEditForms(request.POST, instance=teacher)
-
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("teachers:list"))
-
-    return render(
-        request,
-        "teacher_edit.html",
-        {
-            "form": form,
-            "teacher": teacher,
-            "students": teacher.students.all(),
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+        filters = {
+            "first_name": "__icontains",
+            "last_name": "__icontains",
+            "email": "__icontains",
+            "subject": "__icontains",
+            "birthdate": None,
+            "years_of_experience": "__icontains",
         }
-    )
+
+        for param, lookup in filters.items():
+            value = request.GET.get(param)
+            if value:
+                if lookup:
+                    qs = qs.filter(**{f"{param}{lookup}": value})
+                else:
+                    qs = qs.filter(**{param: value})
+
+        return qs
 
 
-def delete_teacher(request, uuid):
+class TeachersCreateView(CreateView):
 
-    teacher = get_object_or_404(Teacher, uuid=uuid)
+    model = Teacher
+    form_class = TeacherCreateForms
+    template_name = "teacher_create.html"
+    success_url = reverse_lazy("teachers:list")
 
-    teacher.delete()
 
-    return HttpResponseRedirect(reverse("teachers:list"))
+class TeachersEditView(UpdateView):
+
+    model = Teacher
+    form_class = TeacherEditForms
+    template_name = "teacher_edit.html"
+    success_url = reverse_lazy("teachers:list")
+    context_object_name = "teacher"
+    pk_url_kwarg = "uuid"
+
+    def get_object(self, queryset=None):
+        uuid = self.kwargs.get("uuid")
+        return self.get_queryset().get(uuid=uuid)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        teacher = self.get_object()
+        context['students'] = teacher.students.all()
+        return context
+
+
+class TeachersDeleteView(DeleteView):
+
+    model = Teacher
+    template_name = "teacher_confirm_delete.html"
+    success_url = reverse_lazy("teachers:list")
+    context_object_name = "teacher"
+    pk_url_kwarg = "uuid"
+
+    def get_object(self, queryset=None):
+        uuid = self.kwargs.get(self.pk_url_kwarg)
+        if not uuid:
+            raise Http404("Student not found")
+        return self.get_queryset().get(uuid=uuid)

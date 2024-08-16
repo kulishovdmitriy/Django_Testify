@@ -1,86 +1,68 @@
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from groups.models import Group
-from groups.forms import GroupsCreateForms
+from groups.forms import GroupsCreateForms, GroupsEditForms
+
 # Create your views here.
 
 
-def get_groups(request):
-    groups = Group.objects.all()
+class GroupsListView(ListView):
 
-    params = [
-        "name",
-        "course",
-        "start_date",
+    model = Group
+    template_name = "groups_list.html"
+    context_object_name = "groups"
 
-    ]
-    for param in params:
-        value = request.GET.get(param)
-        if value:
-            groups = groups.filter(**{param: value})
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+        filters = {
+            "name": "__icontains",
+            "course": "__icontains",
+            "start_date": "__icontains",
 
-    return render(
-        request,
-        "groups_list.html",
-        {
-            "groups": groups,
         }
-    )
+
+        for param, lookup in filters.items():
+            value = request.GET.get(param)
+            if value:
+                if lookup:
+                    qs = qs.filter(**{f"{param}{lookup}": value})
+                else:
+                    qs = qs.filter(**{param: value})
+
+        return qs
 
 
-def create_group(request):
+class GroupsCreateView(CreateView):
 
-    if request.method == "GET":
-        form = GroupsCreateForms()
-
-    form_create_group = GroupsCreateForms(request.POST)
-
-    if form_create_group.is_valid():
-
-        form_create_group.save()
-        return HttpResponseRedirect(reverse("groups:list"))
-
-    return render(
-        request,
-        "group_create.html",
-        {
-            "form": form,
-        }
-    )
+    model = Group
+    form_class = GroupsCreateForms
+    template_name = "group_create.html"
+    success_url = reverse_lazy("groups:list")
 
 
-def edit_group(request, group_id):
+class GroupsEditView(UpdateView):
 
-    group = get_object_or_404(Group, id=group_id)
+    model = Group
+    form_class = GroupsEditForms
+    template_name = "group_edit.html"
+    success_url = reverse_lazy("groups:list")
+    context_object_name = "group"
+    pk_url_kwarg = "group_id"
 
-    if request.method == "GET":
-        form = GroupsCreateForms(instance=group)
-
-    elif request.method == "POST":
-        form = GroupsCreateForms(request.POST, instance=group)
-
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("groups:list"))
-
-    return render(
-        request,
-        "group_edit.html",
-        {
-            "form": form,
-            "group": group,
-            "students": group.students.all(),
-            "teachers": group.teachers.all(),
-        }
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        group = self.get_object()
+        context['students'] = group.students.all()
+        context['teachers'] = group.teachers.all()
+        return context
 
 
-def delete_group(request, group_id):
+class GroupsDeleteView(DeleteView):
 
-    group = get_object_or_404(Group, id=group_id)
-
-    group.delete()
-
-    return HttpResponseRedirect(reverse("groups:list"))
+    model = Group
+    template_name = "group_confirm_delete.html"
+    success_url = reverse_lazy("groups:list")
+    context_object_name = "group"
+    pk_url_kwarg = "group_id"
