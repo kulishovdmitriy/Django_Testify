@@ -18,7 +18,7 @@
             <div class="mb-3">
                 <input type="submit" class="btn btn-success" value="Save">
 
-                <input formaction="{% url 'students:delete' student.uuid %}" type="submit" class="btn btn-danger" value="Delete">
+                <input formaction="{% url 'students:delete' uuid=student.uuid %}" type="submit" class="btn btn-danger" value="Delete">
 
                 <input type="button" class="btn btn-dark" value="Back" onclick="history.back()">
             </div>

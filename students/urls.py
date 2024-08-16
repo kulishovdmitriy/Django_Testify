@@ -17,14 +17,14 @@ Including another URLconf
 
 from django.urls import path
 
-from students.views import get_students, create_student, edit_student, delete_student
+from students.views import StudentsListView, StudentsCreateView, StudentsEditView, StudentsDeleteView
 
 app_name = "students"
 
 urlpatterns = [
-    path('', get_students, name='list'),
-    path('create/', create_student, name='create'),
-    path('edit/<uuid:uuid>', edit_student, name='edit'),
-    path('delete/<uuid:uuid>', delete_student, name='delete')
+    path('', StudentsListView.as_view(), name='list'),
+    path('create/', StudentsCreateView.as_view(), name='create'),
+    path('edit/<uuid:uuid>', StudentsEditView.as_view(), name='edit'),
+    path('delete/<uuid:uuid>', StudentsDeleteView.as_view(), name='delete')
 
 ]
