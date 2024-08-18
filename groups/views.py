@@ -13,6 +13,7 @@ class GroupsListView(ListView):
     model = Group
     template_name = "groups_list.html"
     context_object_name = "groups"
+    paginate_by = 20
 
     def get_queryset(self):
         qs = super().get_queryset()

@@ -14,6 +14,7 @@ class TeachersListView(ListView):
     model = Teacher
     template_name = "teachers_list.html"
     context_object_name = "teachers"
+    paginate_by = 20
 
     def get_queryset(self):
         qs = super().get_queryset()
