@@ -10,8 +10,6 @@ from django.http.response import HttpResponseRedirect
 
 from accounts.forms import AccountCreateForm, AccountUpdateForm, AccountProfileUpdateForm
 
-from accounts.models import Profile # noqa
-
 # Create your views here.
 
 
