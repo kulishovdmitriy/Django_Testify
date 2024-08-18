@@ -34,9 +34,6 @@ class AccountLoginView(LoginView):
 
     def form_valid(self, form):
         result = super().form_valid(form)
-
-        # TODO profile in now User
-
         messages.info(self.request, f'User {self.request.user} has been successfully logged in')
         return result
 
