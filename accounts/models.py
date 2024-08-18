@@ -20,5 +20,5 @@ class UserAction(models.Model):
 class Profile(models.Model):
 
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='profile')
-    image = models.ImageField(null=True, default='default.jpg', upload_to='pictures')
+    image = models.ImageField(null=True, default='pictures/default.jpg', upload_to='pictures/')
     interests = models.CharField(max_length=128, null=True)
