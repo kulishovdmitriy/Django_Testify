@@ -3,6 +3,9 @@
 
 db.sqlite3
 
+.env
+.env.example
+.gitignore
 .dockerignore
 .flake8
 

@@ -8,3 +8,23 @@ services:
       - .:/project/src
     ports:
       - "8011:8011"
+    depends_on:
+      - server_postgresql
+    env_file:
+      - .env
+
+
+  server_postgresql:
+    image: "postgres:13"
+    container_name: server_postgresql
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+
+
+volumes:
+  pgdata: {}
