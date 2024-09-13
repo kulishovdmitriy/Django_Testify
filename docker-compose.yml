@@ -4,10 +4,13 @@ services:
     build: ./
     container_name: server_backend
     restart: always
+    command:
+      - commands/run_server.sh
     volumes:
       - .:/project/src
+      - static_content:/var/www/web_universe
     ports:
-      - "8011:8011"
+      - "8011:${PORT}"
     depends_on:
       - server_postgresql
     env_file:
@@ -26,5 +29,22 @@ services:
       - .env
 
 
+  server_nginx:
+    image: nginx:1.27-alpine
+    container_name: server_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - static_content:/var/www/web_universe
+    depends_on:
+      - server_backend
+    env_file:
+      - .env
+
+
 volumes:
   pgdata: {}
+  static_content: {}

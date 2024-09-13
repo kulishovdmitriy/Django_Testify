@@ -2,6 +2,7 @@
 /.github
 
 db.sqlite3
+dump.json
 
 .env
 .env.example
