@@ -1,0 +1,9 @@
+/venv
+/.github
+
+db.sqlite3
+
+.dockerignore
+.flake8
+
+Dockerfile
