@@ -9,5 +9,5 @@ COPY . ./
 
 RUN python -m pip install --upgrade pip && pip install -r requirements.txt
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8011"]
+CMD ["bash"]
 

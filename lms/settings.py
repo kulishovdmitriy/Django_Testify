@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gh)_*jul%75p103fy9je#n^hlb4j^1l#5d83qc-7xw(8^(s9!x'
+SECRET_KEY = os.environ['SECRET_KEY'],
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -106,6 +106,7 @@ DATABASES = {
     }
 }
 
+SESSION_COOKIE_AGE = 60 * 120
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -144,8 +145,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    os.path.join(BASE_DIR, 'static')
 ]
+
+STATIC_ROOT = '/var/www/web_universe/static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
