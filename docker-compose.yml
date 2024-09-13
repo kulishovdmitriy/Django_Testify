@@ -1,0 +1,10 @@
+services:
+
+  server_backend:
+    build: ./
+    container_name: server_backend
+    restart: always
+    volumes:
+      - .:/project/src
+    ports:
+      - "8011:8011"
