@@ -6,6 +6,8 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}    
+    
 <h2>Forms All teachers</h2>
 
   <form>
@@ -43,7 +45,8 @@
     <input type="button" class="btn btn-dark" value="Back" onclick="history.back()">
     </div>
   </form>
-
+{% endif %}
+    
 <h2>Table Teachers</h2>
 
 
