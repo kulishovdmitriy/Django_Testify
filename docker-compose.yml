@@ -5,10 +5,12 @@ services:
     container_name: server_backend
     restart: always
     command:
-      - commands/run_server.sh
+      - commands/${RUN_MODE}.sh
     volumes:
       - .:/project/src
       - static_content:/var/www/web_universe
+    environment:
+      - DJANGO_SETTINGS_MODULE=lms.settings.${RUN_MODE}
     ports:
       - "8011:${PORT}"
     depends_on:
