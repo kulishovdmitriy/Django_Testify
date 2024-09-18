@@ -47,6 +47,48 @@ services:
       - .env
 
 
+  server_rabbitmq:
+    image: rabbitmq:3.13.7-management-alpine
+    container_name: server_rabbitmq
+    restart: always
+    ports:
+      - "8181:15672"
+      - "5672:5672"
+    env_file:
+      - .env
+
+
+  server_celery:
+    build: .
+    container_name: server_celery
+    restart: always
+    command:
+      - commands/start_celery.sh
+    volumes:
+      - .:/project/src
+    environment:
+      - DJANGO_SETTINGS_MODULE=lms.settings.${RUN_MODE}
+    depends_on:
+      - server_rabbitmq
+    env_file:
+      - .env
+
+
+  server_celery_beat:
+    build: .
+    container_name: server_celery_beat
+    restart: always
+    command:
+      - commands/start_celery_beat.sh
+    volumes:
+      - .:/project/src
+    depends_on:
+      - server_celery
+      - server_rabbitmq
+    env_file:
+      - .env
+
+
 volumes:
   pgdata: {}
   static_content: {}

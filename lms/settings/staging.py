@@ -1,6 +1,7 @@
 import os # noqa
 from lms.settings.components.base import * # noqa
 from lms.settings.components.database_staging_prod import * # noqa
+from lms.settings.components.celery import * # noqa
 
 
 DEBUG = True
