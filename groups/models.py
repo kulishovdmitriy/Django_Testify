@@ -31,4 +31,4 @@ class Group(models.Model):
     )
 
     def __str__(self):
-        return f"{self.name}, {self.course}, {self.start_date}"
+        return f"{self.name}, {self.course}, {self.start_date}, {self.head}"
