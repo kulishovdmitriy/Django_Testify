@@ -19,19 +19,32 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+
+API_PREFIX = 'api/v1'
+
 urlpatterns = [
 
+    # UI interface
     path('admin/', admin.site.urls),
 
     path('', include('core.urls')),
-
     path('students/', include('students.urls')),
-
     path('teachers/', include('teachers.urls')),
-
     path('groups/', include('groups.urls')),
-
     path('accounts/', include('accounts.urls')),
+
+    # API interface
+    path(f'{API_PREFIX}/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path(f'{API_PREFIX}/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path(f'{API_PREFIX}/lms/', include('students.api.urls')),
+    path(f'{API_PREFIX}/lms/', include('teachers.api.urls')),
+    path(f'{API_PREFIX}/lms/', include('groups.api.urls')),
 
 ]
 
