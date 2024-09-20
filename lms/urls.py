@@ -39,6 +39,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
 
     # API interface
+    path(f'{API_PREFIX}/lms/', include('accounts.api.urls')),
     path(f'{API_PREFIX}/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path(f'{API_PREFIX}/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
