@@ -1,0 +1,98 @@
+services:
+
+  backend_dev:
+    build: ./
+    container_name: backend_dev
+    restart: always
+    command:
+      - commands/dev.sh
+    volumes:
+      - .:/project/src
+      - static_content:/var/www/web_universe
+    environment:
+      - DJANGO_SETTINGS_MODULE=lms.settings.dev
+    ports:
+      - "8011:${PORT}"
+    depends_on:
+      - postgresql_dev
+    env_file:
+      - .env
+
+
+  postgresql_dev:
+    image: "postgres:16-alpine"
+    container_name: postgresql_dev
+    restart: always
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data_dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_TEST}
+      POSTGRES_USER: ${POSTGRES_USER_TEST}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_TEST}
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+
+
+  nginx_dev:
+    image: nginx:1.27-alpine
+    container_name: nginx_dev
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default_dev.conf:/etc/nginx/conf.d/default.conf
+      - static_content:/var/www/web_universe
+    depends_on:
+      - backend_dev
+    env_file:
+      - .env
+
+
+  rabbitmq_dev:
+    image: rabbitmq:3.13.7-management-alpine
+    container_name: rabbitmq_dev
+    restart: always
+    ports:
+      - "8181:15672"
+      - "5672:5672"
+    env_file:
+      - .env
+
+
+  celery_dev:
+    build: .
+    container_name: celery_dev
+    restart: always
+    command:
+      - commands/start_celery.sh
+    volumes:
+      - .:/project/src
+    environment:
+      - DJANGO_SETTINGS_MODULE=lms.settings.dev
+    depends_on:
+      - rabbitmq_dev
+    env_file:
+      - .env
+
+
+  celery_beat_dev:
+    build: .
+    container_name: celery_beat_dev
+    restart: always
+    command:
+      - commands/start_celery_beat.sh
+    volumes:
+      - .:/project/src
+    depends_on:
+      - celery_dev
+      - rabbitmq_dev
+    env_file:
+      - .env
+
+
+volumes:
+  pgdata_dev: {}
+  static_content: {}

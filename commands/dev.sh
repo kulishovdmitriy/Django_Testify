@@ -1,3 +1,5 @@
 #!/bin/bash
 
-python manage.py runserver "0:${PORT}" --settings="lms.settings.${RUN_MODE}"
+echo "launch in DEV mode..."
+
+gunicorn -w ${WORKERS} -b "0:${PORT}" lms.wsgi:application --log-level=${LOG_LEVEL}
