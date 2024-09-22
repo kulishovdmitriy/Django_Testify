@@ -44,21 +44,25 @@ Set up environment:
 
     Create a file .env as described in the example .env.example and fill in your values
 
-In file .env you can switch between dev, staging or prod:
+In file .env you can switch between prod (FOR PRODUCTION):
+
 
     RUN_MODE=
 
-### Follow the starting command for docker-compose
+In project 2 files decker-compose `(decker-compose.dev.yml) to launch the application in development mode` and 
+`(decker-compose.prod.yml) to launch the application in production mode` 
 
-    docker compose up -- build
+### Follow the starting command for docker-compose (dev)
+
+    docker compose -f docker-compose.dev.yml up --build
 
 You need to collect staticfiles:
 
-    docker-compose exec server_backend python manage.py collectstatic
+    docker compose -f docker-compose.dev.yml exec backend_dev python manage.py collectstatic
 
 and media:
 
-    docker-compose exec server_backend cp -r media/ /var/www/web_universe/media
+    docker compose -f docker-compose.dev.yml exec backend_dev cp -r media/ /var/www/web_universe/media
 
 In the container `postgres`,follow the command to create a new user.
 Here `psql` - is a customer utility for PostgreSQL, and `-U postgres` indicates that you are in as a super - user Postgressql `postgres`.
@@ -76,18 +80,21 @@ Exit `psql` from customer utility
 
     /q
 
-In the container `server_backend`, execute the command to perform migrations
+In the container `backend_dev`, execute the command to perform migrations
 
-    docker compose exec server_backend python manage.py migrate
+    docker compose -f docker-compose.dev.yml exec backend_dev python manage.py migrate
 
 Recreate docker-compose:
 
-    docker compose up -- build
+    docker compose -f docker-compose.dev.yml restart
 
-`To use the admin panel, follow the next command in the container "backend":`
+`To use the admin panel, follow the next command in the container "backend_dev":`
 (Follow the finished steps)
  
     python manage.py createsuperuser
 
-### It is possible to use the API interface
+
+### For `docker-compose.prod.yml` you need to make what commands
+
+### It is possible to use the `API interface`
 

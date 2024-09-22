@@ -1,7 +1,7 @@
 # from celery.schedules import crontab
 
 
-CELERY_BROKER_URL = 'amqp://guest:guest@server_rabbitmq:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq_dev:5672//'
 
 # CELERY_BEAT_SCHEDULE = {
 #

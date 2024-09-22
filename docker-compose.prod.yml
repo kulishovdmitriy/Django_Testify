@@ -1,8 +1,8 @@
 services:
 
-  server_backend:
+  backend_prod:
     build: ./
-    container_name: server_backend
+    container_name: backend_prod
     restart: always
     command:
       - commands/${RUN_MODE}.sh
@@ -14,42 +14,39 @@ services:
     ports:
       - "8011:${PORT}"
     depends_on:
-      - server_postgresql
+      - postgresql_prod
     env_file:
       - .env
 
-
-  server_postgresql:
-    image: "postgres:13"
-    container_name: server_postgresql
+  postgresql_prod:
+    image: "postgres:16-alpine"
+    container_name: postgresql_prod
     restart: always
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_prod:/var/lib/postgresql/data_prod
     ports:
-      - "5432:5432"
+      - "5433:5432"
     env_file:
       - .env
 
-
-  server_nginx:
+  nginx_prod:
     image: nginx:1.27-alpine
-    container_name: server_nginx
+    container_name: nginx_prod
     restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/default_prod.conf:/etc/nginx/conf.d/default.conf
       - static_content:/var/www/web_universe
     depends_on:
-      - server_backend
+      - backend_prod
     env_file:
       - .env
 
-
-  server_rabbitmq:
+  rabbitmq_prod:
     image: rabbitmq:3.13.7-management-alpine
-    container_name: server_rabbitmq
+    container_name: rabbitmq_prod
     restart: always
     ports:
       - "8181:15672"
@@ -57,10 +54,9 @@ services:
     env_file:
       - .env
 
-
-  server_celery:
+  celery_prod:
     build: .
-    container_name: server_celery
+    container_name: celery_prod
     restart: always
     command:
       - commands/start_celery.sh
@@ -69,26 +65,24 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=lms.settings.${RUN_MODE}
     depends_on:
-      - server_rabbitmq
+      - rabbitmq_prod
     env_file:
       - .env
 
-
-  server_celery_beat:
+  celery_beat_prod:
     build: .
-    container_name: server_celery_beat
+    container_name: celery_beat_prod
     restart: always
     command:
       - commands/start_celery_beat.sh
     volumes:
       - .:/project/src
     depends_on:
-      - server_celery
-      - server_rabbitmq
+      - celery_prod
+      - rabbitmq_prod
     env_file:
       - .env
 
-
 volumes:
-  pgdata: {}
+  pgdata_prod: {}
   static_content: {}

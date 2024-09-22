@@ -4,10 +4,10 @@ import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB_TEST'),
-        'USER': os.environ.get('POSTGRES_USER_TEST'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD_TEST'),
-        'HOST': os.environ.get('POSTGRES_HOST_TEST'),
-        'PORT': os.environ.get('POSTGRES_PORT_TEST'),
+        'NAME': os.environ['POSTGRES_DB_TEST'],
+        'USER': os.environ['POSTGRES_USER_TEST'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD_TEST'],
+        'HOST': os.environ['POSTGRES_HOST_TEST'],
+        'PORT': os.environ['POSTGRES_PORT_TEST'],
     }
 }
