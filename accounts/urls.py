@@ -24,7 +24,16 @@ Including another URLconf
 from django.urls import path
 from django.contrib.auth.views import PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
-from accounts.views import AccountCreateView, AccountLoginView, AccountLogoutView, AccountUpdateView, ResetPasswordView
+from accounts.views import (
+    AccountCreateView,
+    AccountLoginView,
+    AccountLogoutView,
+    AccountUpdateView,
+    ResetPasswordView,
+
+    activate, ContactUsView
+)
+
 
 app_name = "accounts"
 
@@ -34,6 +43,8 @@ urlpatterns = [
     path('login/', AccountLoginView.as_view(), name='login'),
     path('logout/', AccountLogoutView.as_view(), name='logout'),
     path('profile/', AccountUpdateView.as_view(), name='profile'),
+    path('activate/<uidb64>/<token>/', activate, name='activate'),
+    path('contact_us/', ContactUsView.as_view(), name='contact_us'),
 
     path('password/', ResetPasswordView.as_view(), name='password_reset'),
     path('reset-password/done/', PasswordResetDoneView.as_view(template_name='accounts/password_reset_done.html'),

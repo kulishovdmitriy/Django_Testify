@@ -1,16 +1,22 @@
 from django.contrib import messages
-from django.views.generic.edit import ProcessFormView
-from django.views.generic import CreateView
-from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import reverse_lazy, reverse
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.http.response import HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.views import PasswordResetView
+from django.http import HttpResponse
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.views.generic import CreateView
+from django.views.generic.edit import ProcessFormView, FormView
 
-from accounts.forms import AccountCreateForm, AccountUpdateForm, AccountProfileUpdateForm
+from accounts.forms import AccountCreateForm, AccountUpdateForm, AccountProfileUpdateForm, EmailLoginForm, ContactUsForm
+from accounts.signals import send_activation_email
+from accounts.tasks import send_contact_email
 
 # Create your views here.
 
@@ -22,9 +28,19 @@ class AccountCreateView(CreateView):
     form_class = AccountCreateForm
     success_url = reverse_lazy("accounts:login")
 
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+
+        messages.info(self.request, f'User {self.request.user} (The letter is sent) To continue registration, '
+                                    f'follow the link specified in the letter')
+
+        return super().form_valid(form)
+
 
 class AccountLoginView(LoginView):
-
+    form_class = EmailLoginForm
     template_name = "login.html"
 
     def get_redirect_url(self):
@@ -85,6 +101,32 @@ class AccountUpdateView(LoginRequiredMixin, ProcessFormView):
         )
 
 
+class ContactUsView(LoginRequiredMixin, FormView):
+    template_name = "contact_us.html"
+    extra_content = {"title": "Send us a message!"}
+    success_url = reverse_lazy("core:index")
+    form_class = ContactUsForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            try:
+                send_contact_email.delay(
+                    subject=form.cleaned_data["subject"],
+                    message=form.cleaned_data["message"],
+                    from_email=request.user.email
+                )
+
+                messages.success(request, "Your message has been sent successfully!")
+                return self.form_valid(form)
+
+            except Exception as err:
+                messages.error(request, f"An error occurred: {err}")
+                return self.form_invalid(form)
+        else:
+            return self.form_invalid(form)
+
+
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'password_reset.html'
     email_template_name = 'password_reset_email.html'
@@ -92,3 +134,19 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     success_url = reverse_lazy('accounts:password_reset_done')
     success_message = "An email with instructions to reset your password has been sent to %(email)s."
     subject_template_name = 'password_reset_subject.txt'
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = get_user_model().objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+        user = None
+
+    if user is not None and token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        send_activation_email(user, request)
+        return redirect('accounts:login')
+    else:
+        return HttpResponse('Activation link is invalid!')
