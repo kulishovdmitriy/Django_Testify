@@ -3,6 +3,9 @@
 
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq_prod:5672//'
 
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
 # CELERY_BEAT_SCHEDULE = {
 #
 #     'some_task': {
