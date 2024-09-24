@@ -30,8 +30,10 @@ from accounts.views import (
     AccountLogoutView,
     AccountUpdateView,
     ResetPasswordView,
-
-    activate, ContactUsView
+    ContactUsView,
+    activate,
+    resend_confirmation_email,
+    email_open_tracking,
 )
 
 
@@ -45,6 +47,8 @@ urlpatterns = [
     path('profile/', AccountUpdateView.as_view(), name='profile'),
     path('activate/<uidb64>/<token>/', activate, name='activate'),
     path('contact_us/', ContactUsView.as_view(), name='contact_us'),
+    path('resend_email/', resend_confirmation_email, name='resend_email'),
+    path('email_open/<uidb64>/', email_open_tracking, name='email_open'),
 
     path('password/', ResetPasswordView.as_view(), name='password_reset'),
     path('reset-password/done/', PasswordResetDoneView.as_view(template_name='accounts/password_reset_done.html'),

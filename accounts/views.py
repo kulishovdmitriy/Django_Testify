@@ -9,14 +9,17 @@ from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.generic import CreateView
 from django.views.generic.edit import ProcessFormView, FormView
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
 
 from accounts.forms import AccountCreateForm, AccountUpdateForm, AccountProfileUpdateForm, EmailLoginForm, ContactUsForm
 from accounts.signals import send_activation_email
-from accounts.tasks import send_contact_email
+from accounts.tasks import send_contact_email, send_activation_email_task
+
 
 # Create your views here.
 
@@ -150,3 +153,45 @@ def activate(request, uidb64, token):
         return redirect('accounts:login')
     else:
         return HttpResponse('Activation link is invalid!')
+
+
+def resend_confirmation_email(request):
+    User = get_user_model()
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            if not user.is_active:
+                current_site = get_current_site(request)
+                subject = 'Resend Confirmation Email'
+                message = render_to_string('activation_email.html', {
+                    'user': user,
+                    'domain': current_site.domain if current_site else 'example.com',
+                    'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': token_generator.make_token(user),
+                })
+
+                send_activation_email_task.delay(subject, message, 'your_email@gmail.com', [user.email])
+                messages.success(request, 'Confirmation email sent successfully.')
+            else:
+                messages.info(request, 'Email is already confirmed.')
+        except User.DoesNotExist:
+            messages.info(request, 'No account found with this email.')
+
+    return render(request, 'resend_email.html')
+
+
+def email_open_tracking(request, uidb64):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = get_user_model().objects.get(pk=uid)
+
+        user.email_opened = True
+        user.save()
+
+        with open('static/email/open_email_verify.png', 'rb') as f:
+            return HttpResponse(f.read(), content_type="image/png")
+
+    except get_user_model().DoesNotExist:
+        return HttpResponse(status=404)
