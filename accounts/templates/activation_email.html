@@ -12,7 +12,7 @@
     <a href="{{ domain }}{% url 'accounts:activate' uidb64=uidb64 token=token %}">
         Verification
     </a>
-
+    <img src="{{ domain }}/email_open/{{ uidb64 }}/" alt="" width="1" height="1" style="display:none;" />
 </p>
 <p>If you did not sign up for our service, please ignore this email.</p>
 <p>Thanks,</p>

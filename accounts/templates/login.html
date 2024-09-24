@@ -21,6 +21,10 @@
             <div class="small text-center">
                 <a class="btn btn-primary" href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
             </div>
+
+            <div class="small text-center mt-3">
+                <a class="btn btn-secondary" href="{% url 'accounts:resend_email' %}">Didn't receive confirmation email? Resend</a>
+            </div>
         </form>
 
 {% endblock %}
