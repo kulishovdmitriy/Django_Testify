@@ -50,3 +50,24 @@ class Profile(models.Model):
     image = models.ImageField(null=True, default='pictures/default.jpg', upload_to='pictures/')
     interests = models.CharField(max_length=128, null=True)
     email_opened = models.BooleanField(default=False)
+
+
+class BlockedUser(models.Model):
+    """
+    Represents a blocked user in the system.
+
+    Attributes:
+        user (OneToOneField): A one-to-one relationship to the User model.
+        blocked_at (DateTimeField): The date and time when the user was blocked. Automatically set to the current date and time when the entry is created.
+        reason (CharField): The reason why the user was blocked, can be null.
+
+    Methods:
+        __str__(): Returns a string representation of the blocked user.
+    """
+
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    blocked_at = models.DateTimeField(auto_now_add=True)
+    reason = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return f"{self.user.username} is blocked! Reason: {self.reason}, blocked_at: {self.blocked_at}"

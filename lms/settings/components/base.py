@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'core.middlewares.QueryParamsInjectorMiddleware',
+    'core.middlewares.BlockedUserMiddleware',
 ]
 
 ROOT_URLCONF = 'lms.urls'

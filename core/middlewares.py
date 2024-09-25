@@ -1,5 +1,9 @@
 import copy
 from urllib.parse import urlencode
+from django.urls import reverse
+from django.shortcuts import render
+
+from accounts.models import BlockedUser
 
 
 class QueryParamsInjectorMiddleware:
@@ -37,4 +41,38 @@ class QueryParamsInjectorMiddleware:
 
         response = self.get_response(request)
 
+        return response
+
+
+class BlockedUserMiddleware:
+    """
+    BlockedUserMiddleware class intercepts HTTP requests and checks if the user is blocked.
+
+    If the user is authenticated and found in the BlockedUser table, the middleware will:
+    - Allow access to the 'contact_us' page.
+    - Redirect to 'blocked_user.html' for all other pages.
+
+    Methods:
+        __init__(self, get_response):
+            Initializes the middleware with the response callback.
+
+        __call__(self, request):
+            Processes the incoming request and applies blocking logic.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
+        if request.user.is_authenticated and BlockedUser.objects.filter(user=request.user).exists():
+
+            if request.path == reverse('accounts:contact_us'):
+
+                response = self.get_response(request)
+                return response
+            else:
+                return render(request, 'blocked_user.html')
+
+        response = self.get_response(request)
         return response
