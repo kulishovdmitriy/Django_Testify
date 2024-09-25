@@ -4,6 +4,24 @@ from django.contrib.auth.models import User
 
 
 class UserAction(models.Model):
+    """
+    Represents an action performed by a user, such as login, logout, or profile changes.
+
+    Enum USER_ACTION:
+        Provides a set of predefined actions that a user can perform.
+        LOGIN: User logged in
+        LOGOUT: User logged out
+        CHANGE_PASSWORD: User changed password
+        CHANGE_PROFILE: User changed profile
+        CHANGE_PROFILE_IMAGE: User changed profile image
+
+    Attributes:
+        user: A ForeignKey to the User model, representing the user who performed the action.
+        write_date: A DateTimeField that records the date and time when the action was logged.
+        action: A PositiveSmallIntegerField that stores the type of action performed, chosen from USER_ACTION choices.
+        info: An optional CharField that can store additional information about the action, with a maximum length of 128 characters.
+    """
+
     class USER_ACTION(models.IntegerChoices):
         LOGIN = 0, "Login"
         LOGOUT = 1, "Logout"
@@ -18,6 +36,15 @@ class UserAction(models.Model):
 
 
 class Profile(models.Model):
+    """
+    A Django model that represents a user's profile which extends the built-in User model.
+
+    Attributes:
+        user (OneToOneField): A one-to-one relationship with the User model. Deletes profile when user is deleted.
+        image (ImageField): An optional field to upload a profile picture. Defaults to 'pictures/default.jpg'.
+        interests (CharField): An optional field to store user interests, with a maximum length of 128 characters.
+        email_opened (BooleanField): A boolean field indicating whether the user has opened an email. Defaults to False.
+    """
 
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name='profile')
     image = models.ImageField(null=True, default='pictures/default.jpg', upload_to='pictures/')

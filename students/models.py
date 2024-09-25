@@ -12,6 +12,22 @@ from core.models import Person
 
 
 class Student(Person):
+    """
+    class Student(Person):
+
+    Represents a student entity that inherits from the Person class.
+
+    Attributes:
+    rating (int): The rating of the student, which is a small integer between 0 and 100, defaulting to 0.
+    group (ForeignKey): A foreign key relation to the Group model. If the related group is deleted, the group will be set to null.
+    teacher (ForeignKey): A foreign key relation to the Teacher model. If the related teacher is deleted, the teacher will be set to null.
+
+    Methods:
+    generate_students(count):
+        Static method that generates a specified number of student instances with random data using the Faker library and saves them to the database.
+    __str__():
+        Returns a string representation of the student, including their inherited attributes from the Person class and their rating.
+    """
 
     rating = models.SmallIntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
 

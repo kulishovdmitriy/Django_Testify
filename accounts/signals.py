@@ -13,12 +13,21 @@ from accounts.tasks import send_activation_email_task
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
+    """
+    Creates a profile object after a user is created.
+    The profile is saved to the database.
+    """
+
     if created:
         Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
 def send_activation_email(sender, instance, created, **kwargs):
+    """
+    Sends an activation email after a user is created.
+    """
+
     if created and not instance.is_active:
         request = kwargs.get('request')
         current_site = get_current_site(request) if request else None

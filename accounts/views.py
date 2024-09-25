@@ -25,6 +25,10 @@ from accounts.tasks import send_contact_email, send_activation_email_task
 
 
 class AccountCreateView(CreateView):
+    """
+    A view that creates a new user account, with no privileges,
+    and sends an activation email.
+    """
 
     model = User
     template_name = "registration.html"
@@ -43,6 +47,13 @@ class AccountCreateView(CreateView):
 
 
 class AccountLoginView(LoginView):
+    """
+    A view that allows a user to login using email and password.
+    If the user is not active, an email is sent to the user with an activation link.
+    If the user is active, the page is reloaded.
+    If the user is inactive, he is redirected to the login page again.
+    """
+
     form_class = EmailLoginForm
     template_name = "login.html"
 
@@ -58,11 +69,20 @@ class AccountLoginView(LoginView):
 
 
 class AccountLogoutView(LogoutView):
+    """
+    A view that allows a user to logout.
+    """
 
     template_name = "logout.html"
 
 
 class AccountUpdateView(LoginRequiredMixin, ProcessFormView):
+    """
+    A view that allows a user to update his profile.
+    The user must be logged in.
+    If the user is active, the page is reloaded.
+    If the user is inactive, he is redirected to the login page again.
+    """
 
     def get(self, request, *args, **kwargs):
 
@@ -105,6 +125,14 @@ class AccountUpdateView(LoginRequiredMixin, ProcessFormView):
 
 
 class ContactUsView(LoginRequiredMixin, FormView):
+    """
+    View to handle contact form submissions.
+
+    This view allows logged-in users to send a message via a contact form.
+    Upon successful submission, the form data is processed, and an email is sent asynchronously.
+    If an error occurs during email sending, an error message is displayed.
+    """
+
     template_name = "contact_us.html"
     extra_content = {"title": "Send us a message!"}
     success_url = reverse_lazy("core:index")
@@ -131,6 +159,13 @@ class ContactUsView(LoginRequiredMixin, FormView):
 
 
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    """
+    A view that allows a user to reset his password.
+    If the user is active, the page is reloaded.
+    If the user is inactive, he is redirected to the login page again.
+    If the user does not exist, an error message is displayed.
+    """
+
     template_name = 'password_reset.html'
     email_template_name = 'password_reset_email.html'
     html_email_template_name = 'password_reset_email.html'
@@ -140,6 +175,15 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 
 def activate(request, uidb64, token):
+    """
+    A view that allows a user to activate his account.
+    The link must be activated within 48 hours after the account was created.
+    If the link is active, the user is redirected to the login page.
+    If the link is inactive, an error message is displayed.
+    If the user does not exist, an error message is displayed.
+    If the user is already active, an error message is displayed.
+    """
+
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = get_user_model().objects.get(pk=uid)
@@ -156,6 +200,12 @@ def activate(request, uidb64, token):
 
 
 def resend_confirmation_email(request):
+    """
+    This view processes a POST request containing an email address. If the email is associated
+    with a user account that has not been activated, it will resend the confirmation email to
+    that user.
+    """
+
     User = get_user_model()
 
     if request.method == 'POST':
@@ -183,6 +233,10 @@ def resend_confirmation_email(request):
 
 
 def email_open_tracking(request, uidb64):
+    """
+    Tracks when an email is opened by the user.
+    """
+
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = get_user_model().objects.get(pk=uid)
