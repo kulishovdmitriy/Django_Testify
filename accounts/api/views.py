@@ -7,6 +7,25 @@ from accounts.api.serializers import RegistrationSerializer, AccountSerializer
 
 
 class RegistrationView(generics.CreateAPIView):
+    """
+    class RegistrationView(generics.CreateAPIView):
+    A view that handles the registration of new users.
+
+    queryset: The complete collection of User instances.
+    serializer_class: The serializer class used for validation and deserialization of input data.
+
+    def create(self, request, *args, **kwargs):
+    Handles the creation of a new user instance.
+
+    Parameters:
+    request : HTTP request object containing user registration data.
+    *args : Additional positional arguments.
+    **kwargs : Additional keyword arguments.
+
+    Returns:
+    Response object with serialized user data and HTTP 201 status code if creation is successful.
+    """
+
     queryset = User.objects.all()
     serializer_class = RegistrationSerializer
 
@@ -18,5 +37,14 @@ class RegistrationView(generics.CreateAPIView):
 
 
 class AccountView(generics.ListAPIView):
+    """
+
+    This view provides a read-only endpoint for listing user accounts.
+
+    Attributes:
+        queryset: The queryset containing all User instances to be serialized.
+        serializer_class: The serializer class to be used for serializing the User instances.
+    """
+
     queryset = User.objects.all()
     serializer_class = AccountSerializer
