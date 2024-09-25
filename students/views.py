@@ -58,7 +58,9 @@ class StudentsListView(ListView):
 class StudentsCreateView(LoginRequiredMixin, CreateView):
     """
 
-    StudentsCreateView is a class-based view for handling the creation of new students. It utilizes the `LoginRequiredMixin` to ensure that only authenticated users can access this view and `CreateView` to provide the necessary functionality for creating new records.
+    StudentsCreateView is a class-based view for handling the creation of new students. It utilizes the `LoginRequiredMixin`
+    to ensure that only authenticated users can access this view and `CreateView` to provide the necessary functionality
+    for creating new records.
 
     Attributes:
         model: Specifies the model that is associated with this view, in this case, `Student`.

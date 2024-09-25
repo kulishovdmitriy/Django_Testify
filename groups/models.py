@@ -35,7 +35,8 @@ class Group(models.Model):
         name (models.CharField): The name of the group. Maximum length is 64 characters and cannot be null.
         course (models.CharField): Name of the course associated with the group. Maximum length is 64 characters and can be null.
         start_date (models.DateField): The starting date of the group. It can be null and defaults to the current date.
-        head (models.OneToOneField): A one-to-one relationship to the 'students.Student' model. It can be null and uses the SET_NULL option on deletion. Uses 'head_of_group' as the related name.
+        head (models.OneToOneField): A one-to-one relationship to the 'students.Student' model. It can be null and uses the
+        SET_NULL option on deletion. Uses 'head_of_group' as the related name.
         classrooms (models.ManyToManyField): A many-to-many relationship to the ClassRoom model. Uses 'groups' as the related name.
 
     Methods:

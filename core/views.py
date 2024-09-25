@@ -98,7 +98,8 @@ def error_500(request, exception):
     """
     Handles 500 Internal Server Error responses.
 
-    This view function is triggered when an unhandled exception occurs within the application that results in a 500 error. It renders a custom 500 error HTML page to inform the user that an internal server error has occurred.
+    This view function is triggered when an unhandled exception occurs within the application that results in a 500 error.
+    It renders a custom 500 error HTML page to inform the user that an internal server error has occurred.
 
     Arguments:
         request: The request object representing the current HTTP request.
