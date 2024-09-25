@@ -6,7 +6,7 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}    
+{% if user.is_authenticated and user.is_superuser %}
     
 <h2>Forms All teachers</h2>
 

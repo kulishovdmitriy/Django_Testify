@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Access Denied</title>
+{% endblock %}
+
+{% block header %}
+  <h2>Access Denied</h2>
+{% endblock %}
+
+{% block content %}
+    <h1>Your account has been blocked. Please contact support for assistance.</h1>
+
+    <div class="mt-3">
+        <a class="btn btn-secondary" href="{% url 'accounts:contact_us' %}">Contact us</a>
+    </div>
+{% endblock %}

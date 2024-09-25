@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from django_ratelimit.decorators import ratelimit
 
 # Create your views here.
 
 
+@ratelimit(key='ip', rate='5/m', method='GET', block=True)
 def index(request):
     """
 
