@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 
+{% block title %}
+    <title>Confirm delete group</title>
+{% endblock %}
+
+{% block header %}
+  <h2>Confirm delete group</h2>
+{% endblock %}
+
+
 {% block content %}
-  <h1>Confirm delete group</h1>
+
   <p>Are you sure you want to delete "{{ group }}"?</p>
   <form method="post">
     {% csrf_token %}
